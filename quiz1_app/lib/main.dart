@@ -2,111 +2,129 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 void main() {
-  runApp(const RandomQuoteApp());
-  
+  runApp(const FeelingsApp());
 }
 
-class RandomQuoteApp extends StatelessWidget {
-  const RandomQuoteApp({super.key});
+class FeelingsApp extends StatelessWidget {
+  const FeelingsApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const QuotePage(),
-  
+      title: 'Daily Motivation',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.teal,
+      ),
+      home: const MotivationScreen(),
     );
   }
 }
 
-class QuotePage extends StatefulWidget {
-  const QuotePage({super.key});
+class MotivationScreen extends StatefulWidget {
+  const MotivationScreen({super.key});
 
   @override
-  State<QuotePage> createState() => _QuotePageState();
+  State<MotivationScreen> createState() => _MotivationScreenState();
 }
 
-class _QuotePageState extends State<QuotePage> {
-  final List<Map<String, dynamic>> quotes = [
+class _MotivationScreenState extends State<MotivationScreen> {
+  final List<Map<String, dynamic>> messages = [
     {
-      'text': 'You can do it!',
-      'emoji': '🚀',
+      'quote': 'Start your day with a smile!',
+      'icon': '😊',
+      'bg': Colors.teal[100],
     },
     {
-      'text': 'Keep going!',
-      'emoji': '💪',
-      
+      'quote': 'You are stronger than you think!',
+      'icon': '🔥',
+      'bg': Colors.orange[100],
     },
     {
-      'text': 'Believe in yourself!',
-      'emoji': '🌟',
-   
+      'quote': 'Keep shining, you got this!',
+      'icon': '🌞',
+      'bg': Colors.purple[100],
+    },
+    {
+      'quote': 'One small step every day matters!',
+      'icon': '🚶‍♂️',
+      'bg': Colors.pink[100],
     },
   ];
 
-  String currentText = 'Tap "New Quote" to get motivated!';
-  String currentEmoji = '❓';
-  Color currentColor = Colors.grey[100]!;
+  String displayedQuote = "Press the button to get inspired ✨";
+  String displayedIcon = "💭";
+  Color bgColor = Colors.grey.shade200;
 
-  void showNewQuote() {
-    final random = Random();
-    final selected = quotes[random.nextInt(quotes.length)];
+  void generateMessage() {
+    final randomIndex = Random().nextInt(messages.length);
+    final chosen = messages[randomIndex];
+
     setState(() {
-      currentText = selected['text'];
-      currentEmoji = selected['emoji'];
-      currentColor = selected['color'];
+      displayedQuote = chosen['quote'];
+      displayedIcon = chosen['icon'];
+      bgColor = chosen['bg'];
     });
   }
 
-  void reset() {
+  void clearMessage() {
     setState(() {
-      currentText = 'Tap "New Quote" to get motivated!';
-      currentEmoji = '❓';
-      currentColor = Colors.grey[300]!;
+      displayedQuote = "Press the button to get inspired ✨";
+      displayedIcon = "💭";
+      bgColor = Colors.grey.shade200;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: currentColor,
+      backgroundColor: bgColor,
       appBar: AppBar(
-        title: const Text('How Do You Feel Today?'),
-        backgroundColor: Colors.brown[400],
+        title: const Text("Today's Motivation"),
+        centerTitle: true,
+        backgroundColor: Colors.teal[400],
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 40),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              currentText,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              displayedIcon,
+              style: const TextStyle(fontSize: 90),
             ),
-            const SizedBox(height: 20),
             Text(
-              currentEmoji,
-              style: const TextStyle(fontSize: 70),
+              displayedQuote,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
-                  onPressed: showNewQuote,
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue[200]),
-                  child: const Text('New Quote'),
+                ElevatedButton.icon(
+                  onPressed: generateMessage,
+                  icon: const Icon(Icons.lightbulb_outline),
+                  label: const Text("Inspire Me"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal[300],
+                  ),
                 ),
-                const SizedBox(width: 20),
-                ElevatedButton(
-                  onPressed: reset,
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue[100]),
-                  child: const Text('Reset'),
+                ElevatedButton.icon(
+                  onPressed: clearMessage,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text("Reset"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[400],
+                  ),
                 ),
               ],
             ),
           ],
         ),
-      ),
-    );
-  }
+      ),
+    );
+  }
 }
